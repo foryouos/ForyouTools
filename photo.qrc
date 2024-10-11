@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>photo/Tools.png</file>
+        <file>photo/color.png</file>
+        <file>photo/-to-do.png</file>
+        <file>photo/permission.png</file>
+        <file>photo/settings.png</file>
+        <file>photo/user.png</file>
+    </qresource>
+</RCC>

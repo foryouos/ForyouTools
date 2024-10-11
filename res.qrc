@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/vehicle.svg</file>
+        <file>res/taxi.svg</file>
+        <file>res/RetroStingyCar.svg</file>
+        <file>res/RetroStingySUV.svg</file>
+        <file>res/logo.svg</file>
+        <file>res/CartoonTaxi.svg</file>
+    </qresource>
+</RCC>
