@@ -34,4 +34,7 @@ TARGET = foryouos
 
 #RC_ICONS = color.png
 
+DISTFILES += \
+    README.md
+
 
