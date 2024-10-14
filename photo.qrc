@@ -6,5 +6,6 @@
         <file>photo/permission.png</file>
         <file>photo/settings.png</file>
         <file>photo/user.png</file>
+        <file>photo/circle.png</file>
     </qresource>
 </RCC>

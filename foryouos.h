@@ -7,7 +7,8 @@
 
 #include "foryoucontrol.h"
 #include <QWebEngineView>
-#include "Side/menu.h"
+#include <QPropertyAnimation>
+// #include "Side/menu.h"
 #include <QStackedLayout>
 #include "notifymanager.h"
 QT_BEGIN_NAMESPACE
@@ -30,16 +31,25 @@ private:
 private slots:
     // 初始化ACtion点击 导向的窗体事件
     void UIACtion_Init();
+    // 初始化按钮信号与槽函数
+    void Button_Init();
+    // 所有涉及侧边栏的初始化操作
+    void Slide_Bar_Init();
     void ForyouControlInit();// foryouos控制线程初始化
     // 初始化中国传统色页面
     void Chinese_Web_Page_Init();
     // 右下角 弹窗通知 初始化
     void Notify_init();
+    // 定义弹窗多功能应用函数
+    void Qmessagebox_Detail(QString title,QString log,QString details);
+
+    // 执行主页面侧边栏的隐藏与呈现功能
+    void Main_Slide_Hide_Display_Control();
+
 
 
 private:
-    static QSplitter* createVerticalSplitter(QWidget *parent, QWidget *content1, QWidget *content2,
-                                             Qt::Orientation orientation, int size1, int size2);
+
 private :
     QThread *mthread = nullptr;
     ForyouControl *foryoucontrol = nullptr;
@@ -47,6 +57,8 @@ private :
     QWebEngineView *m_webView = nullptr; // 页面显示对象指针
 
     NotifyManager *notify = nullptr;
+    QPropertyAnimation *propertyAnimation = nullptr;
+
 
 
 
@@ -72,6 +84,12 @@ private:
         QStringLiteral("要有面对问题的勇气，渡过这个困境的话，应该就能一点点地解决问题。感激遇到的所有人吧。"),
         QStringLiteral("虽然晚了点，依靠自己的力量前进吧。为了开始新的人生。")
     };
+
+    //全局侧边栏的状态
+    bool G_Main_Slide_Status = true;
+
+    // 记录但侧边栏发生变化时，右窗体的宽度
+    int G_initialRightWidgetWidth; // 存储 Right_Main_Widget 的初始宽度
 
 
 
