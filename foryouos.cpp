@@ -1,6 +1,8 @@
 ﻿#include "foryouos.h"
 #include "ui_foryouos.h"
-
+#include "MainWidget/mainwidget.h"
+#include "ToDoListWidget/todolistwidget.h"
+#include "ColorWidget/colorwidget.h"
 foryouos::foryouos(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::foryouos)
@@ -8,6 +10,9 @@ foryouos::foryouos(QWidget *parent)
     ui->setupUi(this);
     setWindowIcon(QIcon(":/photo/Tools.png"));
     setWindowTitle("Foryouos 工具箱");
+    // 子窗体加入到主窗体初始化
+    this->AddWidget_Init();
+
     // 初始化ACtion事件
     this->UIACtion_Init();
     // 初始化Button按钮
@@ -30,17 +35,12 @@ foryouos::foryouos(QWidget *parent)
 
 
 
+
 }
 
 foryouos::~foryouos()
 {
     // TODO:清理所有初始化的资源
-    if(m_webView != nullptr)
-    {
-        m_webView->close();
-        delete m_webView;
-        m_webView = nullptr;
-    }
     if(foryoucontrol != nullptr && mthread != nullptr && mthread->isRunning())
     {
         mthread->quit();
@@ -52,6 +52,20 @@ foryouos::~foryouos()
         foryoucontrol = nullptr;
     }
     delete ui;
+}
+
+void foryouos::AddWidget_Init()
+{
+    // 初始化布局
+    MainWidget *mainwidget = new MainWidget(this);
+    ui->Main_Page_Loyout->addWidget(mainwidget);
+    // 初始化ToDoList布局
+    ToDoListWidget *todolistwidget = new ToDoListWidget(this);
+    ui->TODOPage_Layout->addWidget(todolistwidget);
+    // 初始化color widget
+    ColorWidget *colorwidget = new ColorWidget(this);
+    ui->ColorWidget_Layout->addWidget(colorwidget);
+
 }
 
 void foryouos::UIACtion_Init()
@@ -80,20 +94,22 @@ void foryouos::Button_Init()
     connect(ui->ToDoactionBtn, &QPushButton::clicked,this,[&](){ui->MainStackWidget->setCurrentIndex(2);});
     //初始化侧边栏
     connect(ui->HideSideBtn,&QPushButton::clicked,this,&foryouos::Main_Slide_Hide_Display_Control);
+
 }
 
 void foryouos::Slide_Bar_Init()
 {
+    //************* 主页面的 侧边框 **************
     // QPropertyAnimation 隐藏窗体后 让其它窗体 呈现出来
-    propertyAnimation = new QPropertyAnimation(ui->sideBar, "pos", this);
-    propertyAnimation->setEasingCurve(QEasingCurve::InOutCubic);
-    propertyAnimation->setDuration(1000);
+    MainpropertyAnimation = new QPropertyAnimation(ui->sideBar, "pos", this);
+    MainpropertyAnimation->setEasingCurve(QEasingCurve::InOutCubic);
+    MainpropertyAnimation->setDuration(1000);
     //使用信号与槽机制 让隐藏与呈现动作实时呈现 t
 
     // 连接动画值变化的信号
-    connect(propertyAnimation, &QPropertyAnimation::valueChanged, this, [this](const QVariant &value) {
+    connect(MainpropertyAnimation, &QPropertyAnimation::valueChanged, this, [this](const QVariant &value) {
         // 每次动画值改变时，更新主控件的位置
-        qDebug()<<"数值发生改变";
+        //qDebug()<<"数值发生改变";
         QPoint newPos = value.toPoint();
         int new_Pox_Change = newPos.x()+80;
         int New_Width = 0;
@@ -114,7 +130,7 @@ void foryouos::Slide_Bar_Init()
     });
 
 
-    connect(propertyAnimation, &QPropertyAnimation::finished, this, [this]() {
+    connect(MainpropertyAnimation, &QPropertyAnimation::finished, this, [this]() {
         // 当动画完成后更新布局
 
         ui->Main_Widget->update();
@@ -132,6 +148,8 @@ void foryouos::Slide_Bar_Init()
             G_Main_Slide_Status = true;
         }
     });
+
+
 }
 
 void foryouos::ForyouControlInit()
@@ -145,19 +163,6 @@ void foryouos::ForyouControlInit()
 
 void foryouos::Chinese_Web_Page_Init()
 {
-    if(m_webView == nullptr)
-    {
-        m_webView = new QWebEngineView(this);
-        QStackedLayout *layout =new QStackedLayout(ui->frame);//1、引入布局，用于存放QWebengineView；
-        //2、指定的父项ui->frame是在ui界面引入了一个QFrame,用于加载QWebengineView。
-        ui->frame->setLayout(layout); //设置frame的布局为layout。
-        layout->addWidget(m_webView);
-        m_webView->load(G_Chinese_Color_Url);
-    }
-    else
-    {
-        m_webView->reload();
-    }
 
 }
 
@@ -221,19 +226,21 @@ void foryouos::Main_Slide_Hide_Display_Control()
     if(G_Main_Slide_Status) //打开状态呢
     {
         // 关闭侧边栏
-        propertyAnimation->setStartValue(QPoint(0, 0));
-        propertyAnimation->setEndValue(QPoint(-ui->sideBar->width(), 0));
+        MainpropertyAnimation->setStartValue(QPoint(0, 0));
+        MainpropertyAnimation->setEndValue(QPoint(-ui->sideBar->width(), 0));
     }
     else
     {
         //打开侧边栏
         ui->sideBar->setVisible(true); // 打开要立即
-        propertyAnimation->setStartValue(QPoint(-ui->sideBar->width(), 0)); //从负左边即进入隐藏区域
-        propertyAnimation->setEndValue(QPoint(0, 0));
+        MainpropertyAnimation->setStartValue(QPoint(-ui->sideBar->width(), 0)); //从负左边即进入隐藏区域
+        MainpropertyAnimation->setEndValue(QPoint(0, 0));
     }
     //开启侧边栏移动
-    propertyAnimation->start();
+    MainpropertyAnimation->start();
 }
+
+
 
 
 

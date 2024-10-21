@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QMessageBox>
 #include <QThread>
-#include "colorthread.h"
+
 class ForyouControl : public QObject
 {
     Q_OBJECT
@@ -30,7 +30,7 @@ private:
 private:
 
     QThread *Color_Thread = nullptr;
-    ColorThread *colorthread = nullptr;
+
 };
 
 #endif // FORYOUCONTROL_H

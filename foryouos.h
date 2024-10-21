@@ -6,7 +6,6 @@
 #include <QDebug>
 
 #include "foryoucontrol.h"
-#include <QWebEngineView>
 #include <QPropertyAnimation>
 // #include "Side/menu.h"
 #include <QStackedLayout>
@@ -29,6 +28,8 @@ private:
 
     // 调用线程 私有 函数
 private slots:
+    // 子窗体加入主窗体初始化
+    void AddWidget_Init();
     // 初始化ACtion点击 导向的窗体事件
     void UIACtion_Init();
     // 初始化按钮信号与槽函数
@@ -48,16 +49,18 @@ private slots:
 
 
 
+
+
 private:
 
 private :
     QThread *mthread = nullptr;
     ForyouControl *foryoucontrol = nullptr;
 
-    QWebEngineView *m_webView = nullptr; // 页面显示对象指针
+
 
     NotifyManager *notify = nullptr;
-    QPropertyAnimation *propertyAnimation = nullptr;
+    QPropertyAnimation *MainpropertyAnimation = nullptr;
 
 
 
@@ -88,8 +91,11 @@ private:
     //全局侧边栏的状态
     bool G_Main_Slide_Status = true;
 
+
     // 记录但侧边栏发生变化时，右窗体的宽度
-    int G_initialRightWidgetWidth; // 存储 Right_Main_Widget 的初始宽度
+    int G_initialRightWidgetWidth = 0; // 存储 Right_Main_Widget 的初始宽度
+
+
 
 
 
