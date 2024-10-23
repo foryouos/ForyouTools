@@ -30,8 +30,12 @@ foryouos::foryouos(QWidget *parent)
     this->Slide_Bar_Init();
 
 
-
-
+    // 测试主UI页面透明度
+    // QPropertyAnimation *animation = new QPropertyAnimation(this, "windowOpacity");
+    // animation->setDuration(2000); // 2 seconds
+    // animation->setStartValue(1.0); // Fully opaque
+    // animation->setEndValue(0.0); // Fully transparent
+    // animation->start();
 
 
 

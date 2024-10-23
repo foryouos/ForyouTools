@@ -15,7 +15,7 @@ ToDoListWidget::ToDoListWidget(QWidget *parent)
     // ***************** 任务清单侧边栏 ****************
     ToListpropertyAnimation = new QPropertyAnimation(ui->ToDoListDetail_Side, "pos", this); //加上任务名称
     ToListpropertyAnimation->setEasingCurve(QEasingCurve::InOutCubic);
-    ToListpropertyAnimation->setDuration(300);
+    // ToListpropertyAnimation->setDuration(300);
     // 侧边栏隐藏与呈现之后的操作
     // 连接动画值变化的信号
     connect(ToListpropertyAnimation, &QPropertyAnimation::valueChanged, this, [this](const QVariant &value) {
@@ -45,6 +45,7 @@ ToDoListWidget::ToDoListWidget(QWidget *parent)
         }
         else
         {
+             ui->ToDoListDetail_Side->setVisible(true); // 隐藏 是在完成之后
             // 关闭到打开
             G_ToListDetail_Slide_Status = true;
         }
@@ -63,23 +64,20 @@ ToDoListWidget::~ToDoListWidget()
 void ToDoListWidget::ToDoListDetail_Side_DisPlay_Control(bool display)
 {
     G_ToListDetail_Slide_Width = ui->ToDoListWidget_Left->width();
-    //qDebug()<<"G_ToListDetail_Slide_Width 的宽度:"<<G_ToListDetail_Slide_Width;
     if(display)
     {
-        ui->ToDoListDetail_Side->setVisible(true); // 隐藏 是在完成之后
-        // 呈现
-        //qDebug()<<"呈现窗体"<<ui->ToDoWidget->width()<<"结束位置:"<<ui->ToDoWidget->width()-ui->ToDoListDetail_Side->width();
         ToListpropertyAnimation->setStartValue(QPoint(ui->ToDoWidget->width(), 0)); //从负左边即进入隐藏区域
         ToListpropertyAnimation->setEndValue(QPoint(ui->ToDoWidget->width()-ui->ToDoListDetail_Side->width() , 0));
-
+        //设置方向，向后
+        ToListpropertyAnimation->setDirection(QAbstractAnimation::Forward);
     }
     else
     {
 
-        // 隐藏
-        //qDebug()<<"隐藏 开始位置:"<<ui->ToDoWidget->width()-ui->ToDoListDetail_Side->width()<<"结束位置:"<<ui->ToDoWidget->width()+ui->ToDoListDetail_Side->width();
-        ToListpropertyAnimation->setStartValue(QPoint(ui->ToDoWidget->width()-ui->ToDoListDetail_Side->width(), 0)); //从负左边即进入隐藏区域
-        ToListpropertyAnimation->setEndValue(QPoint(ui->ToDoWidget->width()+ui->ToDoListDetail_Side->width()-200, 0));
+        ToListpropertyAnimation->setStartValue(QPoint(ui->ToDoWidget->width(), 0)); //从负左边即进入隐藏区域
+        ToListpropertyAnimation->setEndValue(QPoint(ui->ToDoWidget->width()-ui->ToDoListDetail_Side->width() , 0));
+        //设置方向，向后
+        ToListpropertyAnimation->setDirection(QAbstractAnimation::Backward);
     }
     //开启侧边栏移动
     ToListpropertyAnimation->start();
