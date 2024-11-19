@@ -1,0 +1,222 @@
+QWidget[type="wdgMain"]
+{
+	background:#FFFFFF;
+	max-width: 278px;
+}
+
+QLabel[type="weekend"]
+{
+	background:transparent;
+	font-size:12pt;
+	color:#FF3030;
+}
+
+QLabel[type="workday"]
+{
+	background:transparent;
+	font-size:12pt;
+	color:#363636;
+}
+
+QPushButton[type="month"],QPushButton[type="year"]
+{
+	background:transparent;
+	font-size:12pt;
+	color:#1C1C1C;
+}
+
+QPushButton[type="month"]:hover,QPushButton[type="year"]:hover
+{
+	color:rgba(28,28,28,0.6);
+}
+
+QPushButton[type="weekend"]
+{
+	border:1px solid #FF3030;
+	border-radius: 15px;
+	background:transparent;
+	font-size:12pt;
+	color:#FF3030;
+}
+
+QPushButton[type="workday"]
+{
+	border:1px solid #363636;
+	background:transparent;
+	border-radius: 15px;
+	font-size:12pt;
+	color:#363636;
+}
+
+QPushButton[type="no-current-month-day"]
+{
+	background: transparent;
+	font-size:12pt;
+	color:#CDC9C9;
+	border:1px solid #CDC9C9;
+	border-radius: 15px;
+}
+
+QPushButton[type="no-current-month-day"]:hover, QPushButton[type="select-day"]:hover,QPushButton[type="workday"]:hover,QPushButton[type="weekend"]:hover,QPushButton[type="current-day"]:hover
+{
+	background-color:rgba(30,144,255,0.8);
+	border: 1px solid rgba(30,144,255,0.8);
+}
+
+QPushButton[type="select-day"]
+{
+	background: #1E90FF;
+	font-size:12pt;
+	color:#FFFFFF;
+	border: 1px solid #1E90FF;
+	border-radius:15px;
+}
+
+QPushButton[type="current-day"]
+{
+	background: #F8F8C4;
+	font-size:12pt;
+	color:#FF3030;
+	border: 1px solid #F8F8C4;
+	border-radius:15px;
+}
+
+QPushButton[type="confirm"]
+{
+	border: none;
+	color:#0092FF;
+	font-size:11pt;
+	background: transparent;
+}
+
+QPushButton[type="confirm"]:hover
+{
+	color:rgba(0,146,255,0.6);
+}
+
+QPushButton[type="cancel"]
+{
+	border:none;
+	color:#34445B;
+	font-size:11pt;
+	background: transparent;
+}
+QPushButton[type="cancel"]:hover
+{
+	color:rgba(52, 68, 91, 0.6);
+}
+
+QPushButton[type="today"]
+{
+	border:none;
+	color:#F4A460;
+	font-size:11pt;
+	background: transparent;
+}
+QPushButton[type="today"]:hover
+{
+	color:rgba(244, 164, 91, 0.6);
+}
+
+QPushButton[type="now"]
+{
+	border:none;
+	color:#D2691E;
+	font-size:11pt;
+	background: transparent;
+}
+QPushButton[type="now"]:hover
+{
+	color:rgba(210, 105, 30, 0.6);
+}
+
+QPushButton[type="prev"]
+{
+	border-image: url(:/datetime/left.png);
+	qproperty-minimumSize: 16px 16px;
+	qproperty-maximumSize: 16px 16px;
+}
+QPushButton[type="prev"]:hover
+{
+	border-image: url(:/datetime/left_hover.png);
+}
+QPushButton[type="prev"]:pressed
+{
+	border-image: url(:/datetime/left_pressed.png);
+}
+QPushButton[type="next"]
+{
+	border-image: url(:/datetime/right.png);
+	qproperty-minimumSize: 16px 16px;
+	qproperty-maximumSize: 16px 16px;
+}
+QPushButton[type="next"]:hover
+{
+	border-image: url(:/datetime/right_hover.png);
+}
+QPushButton[type="next"]:pressed
+{
+	border-image: url(:/datetime/right_pressed.png);
+}
+QDateEdit, QTimeEdit
+{
+	border: 1px solid #CDC9C9;
+	font: 12pt;
+}
+
+QComboBox[type="datetime"]
+{
+	background-color: #FFFFFF;
+	border: 1px solid #CDC9C9;
+	border-radius:4px;	
+	height: 30px;
+	width: 280px;
+	font: 12pt;
+	color: rgba(0, 0, 0, 0.65);
+	padding-left: 10px;
+}
+
+QComboBox[type="datetime"]::drop-down
+{
+	width: 20px;
+	height: 20px;
+	padding: 5px 5px 5px 0;
+	image: url(:/datetime/calendar.png);
+}
+
+QComboBox[type="datetime"]::drop-down:hover
+{
+	image: url(:/datetime/calendar_hover.png);
+}
+
+QComboBox[type="datetime"]::down-arrow:on
+{
+	width: 20px;
+	height: 20px;
+	image: url(:/datetime/calendar_selected.png);
+}
+
+QPushButton::menu-indicator
+{
+	image: none;
+}
+
+QMenu[type="month"]
+{
+	background-color:#1E90FF;
+	color: #FFFFFF;
+	font-size:14px;
+}
+
+QMenu[type="month"]::separator
+{
+	background-color:#FFFFFF;
+	height:1px;
+}
+
+QMenu[type="month"]::item
+{
+	width:60px;
+	height:30px;
+	padding-left:8px;
+}

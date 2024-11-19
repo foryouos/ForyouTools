@@ -18,6 +18,8 @@ public:
     ~ToDoListWidget();
 
 private slots:
+    // 任务清单任务栏初始化
+    void ToDoList_Side_Init();
     // 调用呈现ToList任务清单侧边栏的控制
     void ToDoListDetail_Side_DisPlay_Control(bool display);
 

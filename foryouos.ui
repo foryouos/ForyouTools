@@ -397,7 +397,7 @@ border-bottom-left-radius:0px;
 border: 0px solid #ccccd6;</string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="Main_Page">
              <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -450,6 +450,28 @@ border: 0px solid #ccccd6;</string>
               </item>
              </layout>
             </widget>
+            <widget class="QWidget" name="FitWidget">
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <layout class="QVBoxLayout" name="FitWidgetLayout"/>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>
@@ -473,6 +495,7 @@ border: 0px solid #ccccd6;</string>
    <addaction name="Mainaction"/>
    <addaction name="ToDoaction"/>
    <addaction name="ChineseColor"/>
+   <addaction name="FitAction"/>
   </widget>
   <action name="ChineseColor">
    <property name="icon">
@@ -508,6 +531,18 @@ border: 0px solid #ccccd6;</string>
    </property>
    <property name="toolTip">
     <string>代办事项</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="FitAction">
+   <property name="icon">
+    <iconset resource="photo.qrc">
+     <normaloff>:/photo/fit.png</normaloff>:/photo/fit.png</iconset>
+   </property>
+   <property name="text">
+    <string>健康</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

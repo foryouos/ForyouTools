@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>552</height>
+    <width>996</width>
+    <height>676</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,6 +91,12 @@ border: 1px solid #ccccd6;</string>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
              <widget class="QWidget" name="tolisttitleWidget" native="true">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">border: 0px solid #ccccd6;</string>
               </property>
@@ -170,10 +176,30 @@ image: url(:/photo/permission.png);</string>
              </widget>
             </item>
             <item>
-             <widget class="QListView" name="ToDoList">
-              <property name="styleSheet">
-               <string notr="true">border: 0px solid #ccccd6;</string>
-              </property>
+             <widget class="QWidget" name="ToDoListWidgetContent" native="true">
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <property name="leftMargin">
+                <number>60</number>
+               </property>
+               <property name="topMargin">
+                <number>20</number>
+               </property>
+               <property name="rightMargin">
+                <number>60</number>
+               </property>
+               <property name="bottomMargin">
+                <number>20</number>
+               </property>
+               <item>
+                <widget class="QListWidget" name="ToDoList">
+                 <property name="styleSheet">
+                  <string notr="true">border: 0px solid #ccccd6;
+background-color: rgb(255, 255, 255);
+border-radius:10px;</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item>
@@ -184,26 +210,27 @@ image: url(:/photo/permission.png);</string>
                 <height>40</height>
                </size>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
               <property name="styleSheet">
-               <string notr="true">border: 1px solid #ccccd6;
-background-color: rgb(0, 170, 127);
- border-top-left-radius:10px;
- border-top-right-radius:10px;
- border-bottom-left-radius:10px;
- border-bottom-right-radius:10px;</string>
+               <string notr="true"/>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <property name="spacing">
                 <number>0</number>
                </property>
                <property name="leftMargin">
-                <number>0</number>
+                <number>60</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
                </property>
                <property name="rightMargin">
-                <number>0</number>
+                <number>60</number>
                </property>
                <property name="bottomMargin">
                 <number>0</number>
@@ -229,7 +256,13 @@ background-color: rgb(0, 170, 127);
                   </size>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">border-top-right-radius:0px;
+                  <string notr="true">border: 1px solid #ccccd6;
+background-color: rgb(255, 255, 255);
+ border-top-left-radius:10px;
+ border-top-right-radius:10px;
+ border-bottom-left-radius:10px;
+ border-bottom-right-radius:10px;
+border-top-right-radius:0px;
 border-bottom-right-radius:0px;
 border-top-left-radius:10px;
 border-bottom-left-radius:10px</string>
@@ -257,7 +290,13 @@ border-bottom-left-radius:10px</string>
                   </size>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">border: 0px solid #ccccd6;
+                  <string notr="true">border: 1px solid #ccccd6;
+background-color: rgb(255, 255, 255);
+ border-top-left-radius:10px;
+ border-top-right-radius:10px;
+ border-bottom-left-radius:10px;
+ border-bottom-right-radius:10px;
+border: 0px solid #ccccd6;
 border-top-left-radius:0px;
 border-bottom-left-radius:0px;</string>
                  </property>

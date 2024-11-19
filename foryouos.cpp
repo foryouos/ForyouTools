@@ -3,6 +3,7 @@
 #include "MainWidget/mainwidget.h"
 #include "ToDoListWidget/todolistwidget.h"
 #include "ColorWidget/colorwidget.h"
+#include "FitWidget/fitwidget.h"
 foryouos::foryouos(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::foryouos)
@@ -30,12 +31,15 @@ foryouos::foryouos(QWidget *parent)
     this->Slide_Bar_Init();
 
 
+
+#ifdef Debug
     // 测试主UI页面透明度
-    // QPropertyAnimation *animation = new QPropertyAnimation(this, "windowOpacity");
-    // animation->setDuration(2000); // 2 seconds
-    // animation->setStartValue(1.0); // Fully opaque
-    // animation->setEndValue(0.0); // Fully transparent
-    // animation->start();
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "windowOpacity");
+    animation->setDuration(2000); // 2 seconds
+    animation->setStartValue(1.0); // Fully opaque
+    animation->setEndValue(0.0); // Fully transparent
+    animation->start();
+#endif
 
 
 
@@ -69,6 +73,9 @@ void foryouos::AddWidget_Init()
     // 初始化color widget
     ColorWidget *colorwidget = new ColorWidget(this);
     ui->ColorWidget_Layout->addWidget(colorwidget);
+    // 初始化 健康模块
+    FitWidget *fitwidget = new FitWidget(this);
+    ui->FitWidgetLayout->addWidget(fitwidget);
 
 }
 
@@ -82,6 +89,8 @@ void foryouos::UIACtion_Init()
         ui->MainStackWidget->setCurrentIndex(1);
     });
     connect(ui->ToDoaction, &QAction::triggered,this,[&](){ui->MainStackWidget->setCurrentIndex(2);});
+    // 点击健康 管理
+    connect(ui->FitAction,&QAction::triggered,this,[&](){ui->MainStackWidget->setCurrentIndex(3);});
 
 
 }
@@ -207,9 +216,15 @@ void foryouos::Notify_init()
 
         });
         // 初始化测试
+#ifdef Debug
         int count = 1;
         QString text = g_notifies[rand()%g_notifies.size()];
-        notify->notify(QStringLiteral("新消息%1").arg(count++), text);
+        for(int i = 0;i<9;i++)
+        {
+            notify->notify(QStringLiteral("新消息%1").arg(count++), text);
+        }
+#endif
+
 
 }
 

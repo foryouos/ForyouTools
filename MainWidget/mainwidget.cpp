@@ -27,9 +27,10 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
-void MainWidget::Deal_Week_Size_Display(QString weeksize)
+void MainWidget::Deal_Week_Size_Display(QString weeksize,int weekof_day)
 {
     ui->WeekSize->setText(weeksize);
+    ui->WeekDay->setText(QString::number(weekof_day));
 }
 
 void MainWidget::Deal_Year_Of_Today_Display_UI(int year_day, int daysPassed)

@@ -1,4 +1,4 @@
-#ifndef ARRANGEWND_H
+﻿#ifndef ARRANGEWND_H
 #define ARRANGEWND_H
 
 #include <QWidget>
@@ -6,7 +6,8 @@
 #include <QPropertyAnimation>
 
 class NotifyManager;
-
+// 处理鼠标点击事件 发送信号
+// 处理顺序 提示框，计算显示框的高度
 class ArrangedWnd : public QWidget
 {
     Q_OBJECT

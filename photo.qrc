@@ -7,5 +7,6 @@
         <file>photo/settings.png</file>
         <file>photo/user.png</file>
         <file>photo/circle.png</file>
+        <file>photo/fit.png</file>
     </qresource>
 </RCC>

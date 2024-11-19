@@ -36,16 +36,17 @@ NotifyManager::NotifyManager(QObject *parent) : QObject(parent)
     m_isShowQueueCount = true;
 
     setCornerMargins(10, 10);
+    // 初始化 NotifyCountWnd 队列提示框，设计基础性UI
     m_notifyCount = new NotifyCountWnd(this);
 }
-
+// 调用的入口函数 传入 标题和 文本内容
 void NotifyManager::notify(const QString &title, const QString &body, const QVariantMap &data)
 {
     QVariantMap tmp = data;
     tmp.insert("title", title);
     tmp.insert("body", body);
-    m_dataQueue.enqueue(tmp);
-    showNext();
+    m_dataQueue.enqueue(tmp); // 进入队列当中
+    showNext();// 呈现下一个数据
 }
 
 void NotifyManager::setMaxCount(int count)
@@ -87,11 +88,16 @@ QPoint NotifyManager::cornerPos() const
 {
     return m_cornerPos;
 }
-
+// 设置边沿距离:
+// right 指定通知窗口与屏幕右边缘的距离(边距)
+// bottom: 指定通知窗口与屏幕低边缘的距离
 void NotifyManager::setCornerMargins(int right, int bottom)
 {
+    // 获取主屏幕可用区域
     QRect desktopRect = QApplication::primaryScreen()->availableGeometry();
+    // 获取右下角的坐标
     QPoint bottomRignt = desktopRect.bottomRight();
+    //计算通知位置
     m_cornerPos = QPoint(bottomRignt.x() - right, bottomRignt.y() - bottom);
 }
 
@@ -131,32 +137,35 @@ void NotifyManager::setShowQueueCount(bool isShowQueueCount)
     m_isShowQueueCount = isShowQueueCount;
     if (!m_isShowQueueCount) m_notifyCount->showArranged(0);
 }
-
+// 呈现数据 逐步
 void NotifyManager::showNext()
 {
+    // 如果当前的数据 操作设定的预定义最大值 在最上角呈现总数
     if (m_notifyList.size() >= m_maxCount || m_dataQueue.isEmpty())
     {
         showQueueCount();
         return;
     }
-    // 提示框
+    // 申请一个新的提示框进行呈现
     NotifyWnd *notify = new NotifyWnd(this);
-    m_notifyList.append(notify);
-    notify->showArranged(m_notifyList.size());
-    notify->setData(m_dataQueue.dequeue());
+    m_notifyList.append(notify); // 加入到提示框列表
+    notify->showArranged(m_notifyList.size());//相识排列
+    notify->setData(m_dataQueue.dequeue());// 从队列中取出数据 标题详细信息等，用户点击之后也会将对应的详细信息传出去
     // 呈现队列总数
     showQueueCount();
 
+    // 当当前提示框销毁后的处理
     connect(notify, &QObject::destroyed, this, [notify, this](){
         int index = m_notifyList.indexOf(notify);
         m_notifyList.removeAt(index);
         for (; index<m_notifyList.size(); index++)
             m_notifyList[index]->showArranged(index+1);
+        // 定时延时之后 点击下一个
         QTimer::singleShot(m_animateTime, this, [this](){
             showNext();
         });
     });
-
+    // 提示框窗体，如果被点击之后，提示框销毁，发送输出，前端可以通过弹窗的形式读取 提示框中的详细信息
     connect(notify, &ArrangedWnd::clicked, this, [notify, this](){
         notify->deleteLater();
         QVariantMap data = notify->data();
@@ -169,7 +178,7 @@ void NotifyManager::showNext()
         notify->deleteLater();
     });
 }
-
+//呈现 队列 总数
 void NotifyManager::showQueueCount()
 {
     if (!m_isShowQueueCount) return;

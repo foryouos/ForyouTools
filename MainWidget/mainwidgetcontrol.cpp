@@ -18,16 +18,17 @@ void MainWidgetControl::MainWidgetControlInit()
 void MainWidgetControl::Get_Week_of_size()
 {
     int iWeekNumber = QDate::currentDate().weekNumber();
-    qDebug()<<"MainWidgetControl Today iWeekNumber: "<<iWeekNumber;
+    int DayOfWeek = QDate::currentDate().dayOfWeek();
+    qDebug()<<"MainWidgetControl Today iWeekNumber: "<<iWeekNumber<<"今天星期:"<<DayOfWeek;
     if (iWeekNumber % 2 == 0)
     {
         // Even 偶数
-        emit Send_Week_Of_Size("大周");
+        emit Send_Week_Of_Size("大周",DayOfWeek);
     }
     else
     {
         // Odd 奇数
-        emit Send_Week_Of_Size("小周");
+        emit Send_Week_Of_Size("小周",DayOfWeek);
     }
 }
 

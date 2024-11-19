@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/datetime">
+        <file>left.png</file>
+        <file>left_hover.png</file>
+        <file>right.png</file>
+        <file>right_hover.png</file>
+        <file>datetime.qss</file>
+        <file>left_pressed.png</file>
+        <file>right_pressed.png</file>
+        <file>calendar.png</file>
+        <file>calendar_hover.png</file>
+        <file>calendar_selected.png</file>
+    </qresource>
+</RCC>

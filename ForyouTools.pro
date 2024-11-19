@@ -3,8 +3,14 @@ include($$PWD/MainWidget/MainWidget.pri)
 include($$PWD/ToDoListWidget/ToDoListWidget.pri)
 include($$PWD/ColorWidget/ColorWidget.pri)
 include($$PWD/WaveProgressBar/WaveProgressBar.pri)
+include($$PWD/FitWidget/FitWidget.pri)  # 健康模块
+include($$PWD/SqlData/SqlData.pri)  # 数据库操作模块
+include($$PWD/DataTimeCombox/DataTimeCombox.pri)  # DataTimeCombox 模块 用户选择 时间 UI 美化
+
+
 QT       += core gui
-QT += webenginewidgets  # 添加webengine模块
+QT       += charts
+# QT += webenginewidgets  # 添加webengine模块
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17

@@ -47,21 +47,6 @@ border: 1px solid #ccccd6;</string>
          </size>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
          <item>
           <widget class="QLabel" name="Year_Left_Day">
            <property name="maximumSize">
@@ -72,6 +57,34 @@ border: 1px solid #ccccd6;</string>
            </property>
            <property name="text">
             <string>Day</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="WeekDay">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>宋体</family>
+             <pointsize>11</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
+border-radius:10px;
+border: 1px solid #ccccd6;</string>
+           </property>
+           <property name="text">
+            <string>星期</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -95,31 +108,43 @@ border: 1px solid #ccccd6;</string>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="WeekSize">
+          <widget class="QWidget" name="verticalWidget" native="true">
            <property name="maximumSize">
             <size>
              <width>60</width>
-             <height>40</height>
+             <height>16777215</height>
             </size>
            </property>
-           <property name="font">
-            <font>
-             <family>宋体</family>
-             <pointsize>15</pointsize>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">color: rgb(0, 0, 0);
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="WeekSize">
+              <property name="maximumSize">
+               <size>
+                <width>60</width>
+                <height>60</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>宋体</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 0, 0);
 background-color: rgb(255, 255, 255);
 border-radius:10px;
 border: 1px solid #ccccd6;</string>
-           </property>
-           <property name="text">
-            <string>小/大周</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
+              </property>
+              <property name="text">
+               <string>小/大周</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>

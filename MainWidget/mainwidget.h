@@ -21,7 +21,7 @@ public:
 
 public slots:
     // 呈现本周
-    void Deal_Week_Size_Display(QString weeksize);
+    void Deal_Week_Size_Display(QString weeksize,int weekof_day);
     // 呈现本年度剩余天数 呈现今年剩余多少天，已经过去多少天 通过UI的形式呈现出来
     void Deal_Year_Of_Today_Display_UI(int year_day,int daysPassed);
 

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDate>
+#include <QDebug>
 class MainWidgetControl : public QObject
 {
     Q_OBJECT
@@ -23,7 +24,7 @@ public slots:
 
 signals:
     // 发出本周是大周还是小周
-    void Send_Week_Of_Size(QString week);
+    void Send_Week_Of_Size(QString week,int weekod_day);
     // 发出今年移动多少天，已经过去多少天
     void Send_Year_Of_Today(int year_day,int daysPassed);
 
