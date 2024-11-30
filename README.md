@@ -2,8 +2,10 @@
 ## 基础模块
 > - [X] Notify 通知模块
 > - [X] QMessageBox自定义模块
-> - [ ] 主页面侧边栏模块隐藏与呈现，ToList模块
-> - [ ] 日期选项自定义页面
+> - [X] 主页面侧边栏模块隐藏与呈现，
+> - [ ] ToList模块
+> - [X] 日期选项自定义页面
+> - [X] 体重BMI记录折线图
 > - [ ] SQLite操作数据库模块
 > - [ ] Ini 记录软件数据操作模块
 > - [ ] 获取一言数据 API 模块
@@ -27,5 +29,6 @@
 
 # 开发知识点总结
 > * [QMessageBox高级用法](https://mp.weixin.qq.com/s/17Y7KuL9HBdYQgzG0UmQ-A)
-> * [Qt实现侧边栏隐藏与UI呈现]()
-> * [Qt背景透明]()
+> * [Qt实现侧边栏隐藏与UI呈现](https://mp.weixin.qq.com/s/L1AqOUv-n-I7DLJ-2M13jg?token=1564977849&lang=zh_CN)
+> * [Qt背景透明](https://mp.weixin.qq.com/s/LyKs-fJqW_stuNuGZJKaWw?token=1564977849&lang=zh_CN)
+> * [Qt折线图BMI数据](https://mp.weixin.qq.com/s/tLK-qEqWv2aZum2YJF5NmA?token=1564977849&lang=zh_CN)
