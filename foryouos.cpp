@@ -77,6 +77,7 @@ void foryouos::AddWidget_Init()
     FitWidget *fitwidget = new FitWidget(this);
     ui->FitWidgetLayout->addWidget(fitwidget);
 
+
 }
 
 void foryouos::UIACtion_Init()

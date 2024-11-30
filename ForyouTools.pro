@@ -9,7 +9,9 @@ include($$PWD/DataTimeCombox/DataTimeCombox.pri)  # DataTimeCombox 模块 用户
 
 
 QT       += core gui
-QT       += charts
+QT       += charts  # 对折线图的支持
+QT       += sql     # 对数据库的支持
+
 # QT += webenginewidgets  # 添加webengine模块
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

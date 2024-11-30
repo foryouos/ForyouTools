@@ -7,7 +7,8 @@
 #include <QLineSeries>
 #include <QDateTimeAxis>
 #include <QDateTime>
-
+#include "SqlData/sqlthread.h"
+#include <QMessageBox>
 // QT_CHARTS_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
@@ -46,6 +47,14 @@ private:
     QLineSeries *m_lineKM = nullptr;  // 体重折线图
 
     QDateTimeAxis  *m_axisX = nullptr;
+    //数据库申请
+    SQLThread *m_sql = nullptr;
+    // 按照时间顺序 记录  健康数据
+    QMap<QDateTime, QPair<float, float>> m_dataPoints;
 
+    // 记录 总运动量
+    float m_Exercise = 0.0;
+    // 记录 平均体重
+    float m_Aver_Weight = 0.0;
 };
 #endif // FITWIDGET_H

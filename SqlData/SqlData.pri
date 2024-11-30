@@ -1,21 +1,19 @@
-# QT       += core gui
+# 通过线程的形式 引用 SQL多态,来对数据库进行初始化，
+# 使用数据库线程池的方案来提高 数据库访问的效率
 
-# greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-# CONFIG += c++17
-
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
     # main.cpp \
     $$PWD/mysqldata.cpp \
-    $$PWD/sqldata.cpp
+    $$PWD/sqldata.cpp \
+    $$PWD/sqllite.cpp \
+    $$PWD/sqlthread.cpp
 
 HEADERS += \
     $$PWD/mysqldata.h \
-    $$PWD/sqldata.h
+    $$PWD/sqldata.h \
+    $$PWD/sqllite.h \
+    $$PWD/sqlthread.h
 
 # Default rules for deployment.
 # qnx: target.path = /tmp/$${TARGET}/bin

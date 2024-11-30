@@ -1,4 +1,4 @@
-QWidget[type="wdgMain"]
+﻿QWidget[type="wdgMain"]
 {
 	background:#FFFFFF;
 	max-width: 278px;

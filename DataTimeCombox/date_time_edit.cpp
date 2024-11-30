@@ -45,8 +45,8 @@ void DateTimeEdit::initPage()
     QString style;
     if (qss.open(QFile::ReadOnly))
     {
-        style = QLatin1String(qss.readAll());
-
+        // style = QLatin1String(qss.readAll());
+        style = qss.readAll();
         qss.close();
     }
     this->setStyleSheet(style);

@@ -1,7 +1,10 @@
 ﻿#include "sqldata.h"
 
-SqlData::SqlData(QWidget *parent)
-    : QWidget(parent)
+SqlData::SqlData(QObject *parent)
+    : QObject(parent)
 {}
 
-SqlData::~SqlData() {}
+SqlData::~SqlData()
+{
+
+}

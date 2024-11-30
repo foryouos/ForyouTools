@@ -95,12 +95,12 @@ border: 1px solid #ccccd6;</string>
           <widget class="QLabel" name="Main_Title">
            <property name="font">
             <font>
-             <family>Harrington</family>
-             <pointsize>36</pointsize>
+             <family>华文隶书</family>
+             <pointsize>30</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>home page</string>
+            <string>知行合一</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>

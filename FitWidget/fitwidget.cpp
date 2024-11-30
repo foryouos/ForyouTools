@@ -10,6 +10,14 @@ FitWidget::FitWidget(QWidget *parent)
     this->Fit_Chart_Init();
 
     // ui->DataTimeCombox
+    // 初始化获取 Mysql
+    m_sql = new SQLThread;
+    QStringList drivers = m_sql->Get_All_Sql_Driver();
+    foreach(QString driver,drivers)
+    {
+        qDebug()<<"支持的SQL驱动:"<<driver;
+    }
+    m_sql->Connect_Sql_Data(DBSQL::SQLite3,"FitSQLData");
 
 }
 
@@ -21,16 +29,38 @@ FitWidget::~FitWidget()
 void FitWidget::Add_Fit_Data(QDateTime time, float weight,float km)
 {
     // 计算 BMI，BMI = 体重(kg) / 身高(m)^2
-    float bmi = weight / (m_height * m_height);
+    float bmi = (weight/2) / (m_height * m_height);
     // 转换日期为时间戳（毫秒级）
     qreal x = static_cast<qreal>(time.toMSecsSinceEpoch());
     // 为体重数据添加点
-    m_line->append(x, weight);
-    m_lineKM->append(x, km);
-    // qDebug()<<"添加数据为:"<<time<<bmi<<weight;
+    // 检查并替换体重数据点
+    bool weightReplaced = false;
+    for (int i = 0; i < m_line->count(); ++i) {
+        if (m_line->at(i).x() == x) {
+            m_line->replace(i, x, weight);
+            weightReplaced = true;
+            break;
+        }
+    }
+    if (!weightReplaced) {
+        m_line->append(x, weight); // 如果没有找到，添加新数据点
+    }
+
+    // 检查并替换公里数数据点
+    bool kmReplaced = false;
+    for (int i = 0; i < m_lineKM->count(); ++i) {
+        if (m_lineKM->at(i).x() == x) {
+            m_lineKM->replace(i, x, km);
+            kmReplaced = true;
+            break;
+        }
+    }
+    if (!kmReplaced) {
+        m_lineKM->append(x, km); // 如果没有找到，添加新数据点
+    }
+
     // 更新图表（如果需要）
-    // 获取 x 轴的当前范围
-    // 检查 m_axisX 是否已初始化
+    // 获取 x 轴的当前范围 检查 m_axisX 是否已初始化
     if (!m_axisX->min().isValid() || !m_axisX->max().isValid()) {
         // 如果 x 轴范围无效，初始化为当前时间范围
         qDebug()<<"数据为空:设置时间:"<<time;
@@ -50,7 +80,33 @@ void FitWidget::Add_Fit_Data(QDateTime time, float weight,float km)
             m_axisX->setRange(minDate, time);  // 如果新数据时间比最大时间大，更新最大范围
         }
     }
+    m_Exercise += km;
+    if((m_Aver_Weight - 0.0) < 0.1)
+    {
+        m_Aver_Weight = weight;
+    }
+    else
+    {
+        m_Aver_Weight = (m_Aver_Weight + weight)/2;
+    }
     m_view->chart()->update();  // 强制更新图表
+    // 更新统计数据
+    ui->ALL_KM->setText(QString::number(m_Exercise)+" KM");
+    ui->Aver_Weight->setText(QString::number(m_Aver_Weight));
+    ui->BMI->setText(QString::number(bmi));
+    //判断BMI值 来 健康水平进行判断
+    QString obesityStatus;
+    if (bmi < 18.5) {
+        obesityStatus = "体重过轻";
+    } else if (bmi >= 18.5 && bmi <= 23.9) {
+        obesityStatus = "正常体重";
+    } else if (bmi >= 24 && bmi <= 27.9) {
+        obesityStatus = "超重";
+    } else if (bmi >= 28) {
+        obesityStatus = "肥胖";
+    }
+    // 打印 BMI 值和对应的肥胖状态
+    ui->HealthStatus->setText(obesityStatus);
 
 }
 
@@ -58,12 +114,20 @@ void FitWidget::Fit_Chart_Init()
 {
     // 创建图标视图 QChartView
     m_view=new QChartView(ui->LineWidget);
+    m_view->setRubberBand(QChartView::HorizontalRubberBand);
+
     // m_view->resize(QSize(800,600));
     // 创建图标 QChart
     m_chart=new QChart();
     m_chart->setTheme(QChart::ChartTheme::ChartThemeLight);
+    // 设置外边距 可以使外面的空白大大减少
+    QMargins m(-10,-10,-10,-10);
+    m_chart->setMargins(m);
     // 将图标设置给图标视图
     m_view->setChart(m_chart);
+
+
+
 
     // 设置图标 标题
     // m_chart->setTitle("健康数据管理");
@@ -89,6 +153,7 @@ void FitWidget::Fit_Chart_Init()
     m_axisX->setLinePen(pen);
     //把X轴添加到Qhart的底部，同样一个轴对象只能添加进去一次，再次添加就不生效
     m_chart->addAxis(m_axisX, Qt::AlignBottom);
+    // m_chart->createDefaultAxes();
 
     // 创建 左 Y轴
     QValueAxis * axisY = new QValueAxis();
@@ -133,20 +198,23 @@ void FitWidget::Fit_Chart_Init()
 
     // 给折线系列添加 BMI 数据点
     // 合并数据，使用 QPair 结构同时保存体重和身高的点
-    QVector<QPair<QDateTime, QPair<float, float>>> dataPoints = {
-        {startDate, {120, 7.5}}, // 2024-01-01
-        {startDate.addDays(20), {135, 7.5}}, // 2024-01-21
-        {startDate.addDays(30), {138, 7.5}}, // 2024-01-31
-        {startDate.addDays(40), {134, 7.5}}, // 2024-02-10
-        {startDate.addDays(60), {130, 7.5}}  // 2024-03-01
-    };
-    // 单循环遍历数据点
-    for (const auto& dataPoint : dataPoints)
-    {
-        qreal weight = dataPoint.second.first;
-        this->Add_Fit_Data(dataPoint.first,weight,dataPoint.second.second);
-    }
+    // TODO:从数据库中获取数据
 
+    m_dataPoints[startDate] = {120, 7.5};  // 2024-01-01
+    m_dataPoints[startDate.addDays(100)] = {135, 7.5};  // 2024-01-21
+    m_dataPoints[startDate.addDays(30)] = {138, 7.5};  // 2024-01-31
+    m_dataPoints[startDate.addDays(40)] = {134, 7.5};  // 2024-02-10
+    m_dataPoints[startDate.addDays(60)] = {130, 7.5};  // 2024-03-01
+    // 单循环遍历数据点
+    // 单循环遍历数据点
+    for (const auto& dataPoint : m_dataPoints.toStdMap())
+    {
+        qreal weight = dataPoint.second.first;  // 正确，访问 QPair 的 first 部分
+        qreal km = dataPoint.second.second;  // 正确，访问 QPair 的 second 部分
+        m_dataPoints.find(dataPoint.first);
+        this->Add_Fit_Data(dataPoint.first, weight, km);  // 使用 QDateTime 和两个 float
+
+    }
     //把系列添加到QChart中
     m_chart->addSeries(m_line);
     m_chart->addSeries(m_lineKM);
@@ -160,20 +228,37 @@ void FitWidget::Fit_Chart_Init()
 }
 void FitWidget::on_Add_Data_clicked()
 {
+    //TODO: 合法数据 同步数据库
     // 获取用户输入的体重
     float weight = ui->weight->text().toFloat();
     // 获取用户输入的运动量
     float km = ui->KM->text().toFloat();
     // 2024-11-19 16:46:45
     QDateTime time =  QDateTime::fromString(ui->DataTimeCombox->currentText(), "yyyy-MM-dd HH:mm:ss");
-    qDebug()<<"添加的时间:"<<time<<"添加的重量:"<<weight;
+    // 需要重新构建 数据 将原有的数据加入到 如果时间加入之前的数据 折线图会 倒回去 并没有按照时间顺序
     if(time.isValid() && weight>=0 && km>=0)
     {
-        this->Add_Fit_Data(time,weight,km);
+        m_dataPoints[time] = {weight, km};
+
+        // 可以使用replace 即不再需要 使用clear 提高效率
+        m_Aver_Weight = 0.0;
+        m_Exercise = 0.0;
+        m_line->clear();
+        m_lineKM->clear();
+
+        for (const auto& dataPoint : m_dataPoints.toStdMap())
+        {
+            qreal weight = dataPoint.second.first;  // 正确，访问 QPair 的 first 部分
+            qreal km = dataPoint.second.second;  // 正确，访问 QPair 的 second 部分
+            m_dataPoints.find(dataPoint.first);
+            this->Add_Fit_Data(dataPoint.first, weight, km);  // 使用 QDateTime 和两个 float
+        }
+
     }
     else
     {
         qDebug()<<"健康数据警告:"<<" 添加的健康数据有误,请检查有效输入";
+        QMessageBox::warning(this,"数据警告","输入的健康数据不合法,请重新输入");
     }
 
 }
@@ -227,7 +312,7 @@ void FitWidget::CreateBMIAxisWithColorRanges()
 
 void FitWidget::resizeEvent(QResizeEvent *event)
 {
-    m_view->resize(ui->LineWidget->size());  // 重述大小
+    m_view->resize(ui->CenterWidget->size());  // 重述大小
     m_view->setContentsMargins(0,0,0,0);
     event->accept();
 }
