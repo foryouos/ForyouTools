@@ -331,13 +331,11 @@ void foryouos::on_activateSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
     }
     case QSystemTrayIcon::MiddleClick:  // 中间按钮
     {
-        qDebug()<<"鼠标中间按钮点击";
         break;
     }
     case QSystemTrayIcon::Context: // 请求系统托盘的上下文菜单 鼠标右键，会呈现Menu菜单
     {
-        this->showTrayMessage();
-        qDebug()<<"请求系统托盘上下文菜单";
+        // this->showTrayMessage();
         break;
     }
     case QSystemTrayIcon::Unknown:

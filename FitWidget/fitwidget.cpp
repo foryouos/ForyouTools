@@ -6,30 +6,51 @@ FitWidget::FitWidget(QWidget *parent)
     , ui(new Ui::FitWidget)
 {
     ui->setupUi(this);
-    // 创建表格 初始化
-    this->Fit_Chart_Init();
+
 
     // ui->DataTimeCombox
     // 初始化获取 Mysql
     m_sql = new SQLThread;
-    QStringList drivers = m_sql->Get_All_Sql_Driver();
-    foreach(QString driver,drivers)
-    {
-        qDebug()<<"支持的SQL驱动:"<<driver;
-    }
-    m_sql->Connect_Sql_Data(DBSQL::SQLite3,"FitSQLData");
+    // 处理发送回来的数据
+    connect(m_sql,&SQLThread::Send_Fit_Data,this,&FitWidget::Deal_Fit_Data);
+    // QStringList drivers = m_sql->Get_All_Sql_Driver();
+    // foreach(QString driver,drivers)
+    // {
+    //     qDebug()<<"支持的SQL驱动:"<<driver;
+    // }
+    m_sql->Connect_Sql_Data(DBSQL::SQLite3,"FitSQLData.db","foryouos","123456");
+    // 如果健康数据表 不存在 ，要创建健康数据 表
+    QString createTable_fit =  QString("CREATE TABLE Fit (\
+                                      id INTEGER PRIMARY KEY AUTOINCREMENT,\
+                                      Data TEXT NOT NULL,\
+                                      Exercise REAL NOT NULL,\
+                                      BMI REAL NOT NULL,\
+                                      Week TEXT NOT NULL,\
+                                      weight REAL NOT NULL)");
+
+    m_sql->Judge_Table_IsExit("Fit",createTable_fit);
+
+
+    // 创建表格 初始化
+    this->Fit_Chart_Init();
+
+
 
 }
 
 FitWidget::~FitWidget()
 {
+    if(m_sql != nullptr)
+    {
+        delete m_sql;
+        m_sql = nullptr;
+    }
     delete ui;
 }
 
-void FitWidget::Add_Fit_Data(QDateTime time, float weight,float km)
+void FitWidget::Add_Fit_Data(QDateTime time, float weight,float km,float bmi)
 {
-    // 计算 BMI，BMI = 体重(kg) / 身高(m)^2
-    float bmi = (weight/2) / (m_height * m_height);
+
     // 转换日期为时间戳（毫秒级）
     qreal x = static_cast<qreal>(time.toMSecsSinceEpoch());
     // 为体重数据添加点
@@ -68,7 +89,7 @@ void FitWidget::Add_Fit_Data(QDateTime time, float weight,float km)
     }
     else
     {
-        QDateTime minDate = QDateTime::fromString("2024-01-01", "yyyy-MM-dd");
+        QDateTime minDate = QDateTime::fromString("2024-12-01", "yyyy-MM-dd");
         QDateTime maxDate = m_axisX->max();
         // 更新 x 轴的最小最大范围
         if (time < minDate)
@@ -108,6 +129,37 @@ void FitWidget::Add_Fit_Data(QDateTime time, float weight,float km)
     // 打印 BMI 值和对应的肥胖状态
     ui->HealthStatus->setText(obesityStatus);
 
+
+
+}
+
+void FitWidget::Add_Data_To_Sql(QDateTime time, float width, float km, float BMI)
+{
+    QString iWeekNumber = time.toString("ddd");
+    QString Insert_Data_Code;
+    Insert_Data_Code = QString("INSERT INTO Fit(Data,Exercise,BMI,Week,weight) VALUES('%1',%2,%3,'%4',%5);")
+                .arg(time.toString("yyyy-MM-dd HH:mm:ss")).arg(QString::number(km)).arg(QString::number(BMI)).arg(iWeekNumber).arg(QString::number(width));
+    // qDebug()<<Insert_Data_Code;
+    m_sql->Exec_SQl_Statement(Insert_Data_Code);
+}
+
+void FitWidget::Get_All_Sql_Data()
+{
+    QString query_code = "SELECT Data,Exercise,BMI,Week,weight FROM Fit;";
+    m_sql->Exec_Sql_Query(query_code);
+}
+
+void FitWidget::Deal_Fit_Data(QString startDate, float Exercise, float BMI, QString Week, float weight)
+{
+    QDateTime time =  QDateTime::fromString(startDate, "yyyy-MM-dd HH:mm:ss");
+    m_dataPoints[time] = {weight, Exercise};
+    for (const auto& dataPoint : m_dataPoints.toStdMap())
+    {
+        qreal weight = dataPoint.second.first;  // 正确，访问 QPair 的 first 部分
+        qreal km = dataPoint.second.second;  // 正确，访问 QPair 的 second 部分
+        m_dataPoints.find(dataPoint.first);
+        this->Add_Fit_Data(dataPoint.first, weight, km,BMI);  // 使用 QDateTime 和两个 float
+    }
 }
 
 void FitWidget::Fit_Chart_Init()
@@ -133,7 +185,7 @@ void FitWidget::Fit_Chart_Init()
     // m_chart->setTitle("健康数据管理");
     // 设置X 轴
     // 生成日期时间数据，假设开始日期为 2024-01-01
-    QDateTime startDate = QDateTime::fromString("2024-01-01", "yyyy-MM-dd");
+    QDateTime startDate = QDateTime::fromString("2024-12-01", "yyyy-MM-dd");
     QDateTime EndDate = QDateTime::fromString("2025-01-01", "yyyy-MM-dd");
     m_axisX = new QDateTimeAxis;
     m_axisX->setFormat("yyyy-MM-dd"); // 设置日期显示格式（年-月-日）
@@ -198,23 +250,41 @@ void FitWidget::Fit_Chart_Init()
 
     // 给折线系列添加 BMI 数据点
     // 合并数据，使用 QPair 结构同时保存体重和身高的点
-    // TODO:从数据库中获取数据
 
+#if 0
+     this->Get_All_Sql_Data();
     m_dataPoints[startDate] = {120, 7.5};  // 2024-01-01
     m_dataPoints[startDate.addDays(100)] = {135, 7.5};  // 2024-01-21
     m_dataPoints[startDate.addDays(30)] = {138, 7.5};  // 2024-01-31
     m_dataPoints[startDate.addDays(40)] = {134, 7.5};  // 2024-02-10
     m_dataPoints[startDate.addDays(60)] = {130, 7.5};  // 2024-03-01
     // 单循环遍历数据点
-    // 单循环遍历数据点
     for (const auto& dataPoint : m_dataPoints.toStdMap())
     {
         qreal weight = dataPoint.second.first;  // 正确，访问 QPair 的 first 部分
         qreal km = dataPoint.second.second;  // 正确，访问 QPair 的 second 部分
+        // 计算 BMI，BMI = 体重(kg) / 身高(m)^2
+        float bmi = (weight/2) / (m_height * m_height);
         m_dataPoints.find(dataPoint.first);
-        this->Add_Fit_Data(dataPoint.first, weight, km);  // 使用 QDateTime 和两个 float
+        this->Add_Fit_Data(dataPoint.first, weight, km,bmi);  // 使用 QDateTime 和两个 float
 
     }
+#else
+    // TODO:从数据库中获取数据
+    this->Get_All_Sql_Data();
+    // 单循环遍历数据点
+    // for (const auto& dataPoint : m_dataPoints.toStdMap())
+    // {
+    //     qreal weight = dataPoint.second.first;  // 正确，访问 QPair 的 first 部分
+    //     qreal km = dataPoint.second.second;  // 正确，访问 QPair 的 second 部分
+    //     // 计算 BMI，BMI = 体重(kg) / 身高(m)^2
+    //     float bmi = (weight/2) / (m_height * m_height);
+    //     m_dataPoints.find(dataPoint.first);
+    //     this->Add_Fit_Data(dataPoint.first, weight, km,bmi);  // 使用 QDateTime 和两个 float
+    // }
+
+
+#endif
     //把系列添加到QChart中
     m_chart->addSeries(m_line);
     m_chart->addSeries(m_lineKM);
@@ -233,6 +303,9 @@ void FitWidget::on_Add_Data_clicked()
     float weight = ui->weight->text().toFloat();
     // 获取用户输入的运动量
     float km = ui->KM->text().toFloat();
+
+    // 计算 BMI，BMI = 体重(kg) / 身高(m)^2
+    float bmi = (weight/2) / (m_height * m_height);
     // 2024-11-19 16:46:45
     QDateTime time =  QDateTime::fromString(ui->DataTimeCombox->currentText(), "yyyy-MM-dd HH:mm:ss");
     // 需要重新构建 数据 将原有的数据加入到 如果时间加入之前的数据 折线图会 倒回去 并没有按照时间顺序
@@ -251,8 +324,12 @@ void FitWidget::on_Add_Data_clicked()
             qreal weight = dataPoint.second.first;  // 正确，访问 QPair 的 first 部分
             qreal km = dataPoint.second.second;  // 正确，访问 QPair 的 second 部分
             m_dataPoints.find(dataPoint.first);
-            this->Add_Fit_Data(dataPoint.first, weight, km);  // 使用 QDateTime 和两个 float
+            this->Add_Fit_Data(dataPoint.first, weight, km,bmi);  // 使用 QDateTime 和两个 float
         }
+
+
+        //TODO: 将添加的数据 添加到数据库中
+        this->Add_Data_To_Sql(time,weight,km,bmi);
 
     }
     else

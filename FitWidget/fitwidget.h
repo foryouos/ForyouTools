@@ -26,7 +26,14 @@ public:
     ~FitWidget();
 public slots:
     // 向表格中 添加数据
-    void Add_Fit_Data(QDateTime time,float width,float km);
+    void Add_Fit_Data(QDateTime time,float width,float km,float BMI);
+
+    // 拼接数据 加入到数据库 中
+    void Add_Data_To_Sql(QDateTime time,float width,float km,float BMI);
+    // 从数据库中获取所有 健康数据
+    void Get_All_Sql_Data();
+    // 处理发送回来的健康数据
+    void Deal_Fit_Data(QString startDate,float Exercise,float BMI,QString Week,float weight);
 
 private slots:
     // 体重数据表格 初始化
