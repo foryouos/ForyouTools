@@ -9,4 +9,10 @@
         <file>photo/circle.png</file>
         <file>photo/fit.png</file>
     </qresource>
+    <qresource prefix="/Tray">
+        <file>photo/TrayMax.png</file>
+        <file>photo/TrayMini.png</file>
+        <file>photo/TrayShow.png</file>
+        <file>photo/TrayExit.png</file>
+    </qresource>
 </RCC>

@@ -13,6 +13,8 @@ foryouos::foryouos(QWidget *parent)
     setWindowTitle("Foryouos 工具箱");
     // 子窗体加入到主窗体初始化
     this->AddWidget_Init();
+    // 使系统退出时,位于系统托盘
+    this->Set_App_SysTray();
 
     // 初始化ACtion事件
     this->UIACtion_Init();
@@ -29,6 +31,8 @@ foryouos::foryouos(QWidget *parent)
 
     // 初始化相关的侧边栏操作
     this->Slide_Bar_Init();
+
+
 
 
 
@@ -260,6 +264,149 @@ void foryouos::Main_Slide_Hide_Display_Control()
     MainpropertyAnimation->start();
 }
 
+void foryouos::Set_App_SysTray()
+{
+    // 判断系统托盘是否支持
+    if(QSystemTrayIcon::isSystemTrayAvailable()){
+
+        if(menu == nullptr)
+        {
+            menu = new QMenu(this);
+        }
+        QIcon icon(":/photo/Tools.png");
+        SysIcon = new QSystemTrayIcon(this);
+        SysIcon->setIcon(icon);
+        SysIcon->setToolTip("Foryou工具集");
+        min = new QAction("最小化",this);
+        QIcon icon_min(":/Tray/photo/TrayMini.png");
+        min->setIcon(icon_min);
+        connect(min,&QAction::triggered,this,&QMainWindow::hide);
+        QIcon icon_max(":/Tray/photo/TrayMax.png");
+
+        max = new QAction("最大化",this);
+        max->setIcon(icon_max);
+        connect(max,&QAction::triggered,this,&QMainWindow::showMaximized);
+        restor = new QAction("恢复窗体",this);
+        QIcon icon_restor(":/Tray/photo/TrayShow.png");
+        restor->setIcon(icon_restor);
+        connect(restor,&QAction::triggered,this,&QMainWindow::showNormal);
+        quit = new QAction("退出",this);
+        QIcon icon_quit(":/Tray/photo/TrayExit.png");
+        quit->setIcon(icon_quit);
+        connect(quit,&QAction::triggered,qApp,&QApplication::quit);
+        //当用户点击此系统托盘之后 会触发的事件
+        connect(SysIcon,&QSystemTrayIcon::activated,this,&foryouos::on_activateSysTrayIcon);
+
+        menu->addAction(min);
+        menu->addAction(max);
+        menu->addAction(restor);
+        menu->addSeparator(); //添加分割符
+        menu->addAction(quit);
+        SysIcon->setContextMenu(menu); //添加菜单
+        SysIcon->show();
+        this->Set_SysTray_Visible(true);
+
+        // 启动定时器
+        // m_iTimer = startTimer(500);
+
+    }else
+    {
+        qDebug()<<"系统通盘不可用";
+    }
+
+}
+
+void foryouos::on_activateSysTrayIcon(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason){
+    case QSystemTrayIcon::Trigger: //系统托盘被点击
+    {
+
+        break;
+    }
+    case QSystemTrayIcon::DoubleClick: //双击  --> 呈现窗体
+    {
+        this->show();
+        break;
+    }
+    case QSystemTrayIcon::MiddleClick:  // 中间按钮
+    {
+        qDebug()<<"鼠标中间按钮点击";
+        break;
+    }
+    case QSystemTrayIcon::Context: // 请求系统托盘的上下文菜单 鼠标右键，会呈现Menu菜单
+    {
+        this->showTrayMessage();
+        qDebug()<<"请求系统托盘上下文菜单";
+        break;
+    }
+    case QSystemTrayIcon::Unknown:
+    {
+        qDebug()<<"未知的系统托盘";
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void foryouos::Set_SysTray_Visible(bool visible)
+{
+    if(SysIcon!=nullptr)
+    {
+        SysIcon->setVisible(visible);
+    }
+}
+
+void foryouos::closeEvent(QCloseEvent *event)
+{
+    try {
+        if(SysIcon->isVisible())
+        {
+            this->hide();
+            event->ignore();
+        }
+        else
+        {
+            event->accept();
+        }
+    } catch (_exception e) {
+        qDebug()<<"foryouos函数 closeEvent 异常"<<e.name;
+    }
+}
+
+void foryouos::timerEvent(QTimerEvent *event)
+{
+    if(SysIcon !=nullptr)
+    {
+        this->Set_Tray_twinkle();
+    }
+
+}
+
+void foryouos::showTrayMessage()
+{
+
+    QSystemTrayIcon::MessageIcon msgIcon = QSystemTrayIcon::Information;
+
+    SysIcon->showMessage("托盘测试", "托盘测试信息", msgIcon,
+                         5 * 1000);
+}
+// 实现 系统 托盘 闪烁 功能
+void foryouos::Set_Tray_twinkle()
+{
+    static bool twinkle_state = true;
+    if(twinkle_state)
+    {
+        SysIcon->setIcon(QIcon(":/null.png"));
+        twinkle_state = false;
+    }
+    else
+    {
+        SysIcon->setIcon(QIcon(":/photo/Tools.png"));
+        twinkle_state = true;
+    }
+}
 
 
 
